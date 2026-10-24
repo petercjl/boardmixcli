@@ -1,0 +1,1 @@
+console.log('@petercjl/boardmixcli: CLI installation is one phase. Ask your current Agent to read INSTALL.md / UPDATE.md, resolve its own Skill destination, run skill install/update, verify hashes and refresh host discovery. No service access is granted by installation.');

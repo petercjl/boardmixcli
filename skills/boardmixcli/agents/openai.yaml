@@ -1,0 +1,3 @@
+interface:
+  display_name: "BoardmixCLI"
+  short_description: "Operate Boardmix through explicit atomic CLI commands"

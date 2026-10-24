@@ -1,0 +1,31 @@
+{
+  "schema": "portable-skill-adapter",
+  "schema_version": "1.0.0",
+  "platform": "generic",
+  "mappings": [
+    {
+      "capability_id": "command.execute",
+      "status": "implemented",
+      "implementation": {
+        "kind": "instruction",
+        "discovery": "Resolve command execution and native desktop controls from the current Agent advertised tools. CLI is target-owned .runtime/bin/boardmixcli.mjs; run with Node >=22. Console and tab inspection use host-authorized native desktop control. Return CAPABILITY_UNAVAILABLE when missing."
+      },
+      "features": [
+        "node22",
+        "json-results"
+      ]
+    },
+    {
+      "capability_id": "desktop.console",
+      "status": "implemented",
+      "implementation": {
+        "kind": "instruction",
+        "discovery": "Resolve command execution and native desktop controls from the current Agent advertised tools. CLI is target-owned .runtime/bin/boardmixcli.mjs; run with Node >=22. Console and tab inspection use host-authorized native desktop control. Return CAPABILITY_UNAVAILABLE when missing."
+      },
+      "features": [
+        "console-paste",
+        "inspect-open-tabs"
+      ]
+    }
+  ]
+}

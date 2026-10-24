@@ -1,0 +1,67 @@
+{
+  "schema": "portable-skill-capabilities",
+  "schema_version": "1.0.0",
+  "skill": "boardmixcli",
+  "target_platforms": [
+    "generic"
+  ],
+  "host_resolution": {
+    "fallback_adapter": "generic",
+    "destination": "host-supplied explicit Skill directory"
+  },
+  "capabilities": [
+    {
+      "id": "command.execute",
+      "purpose": "Execute target-owned Node CLI",
+      "required": true,
+      "required_features": [
+        "node22",
+        "json-results"
+      ],
+      "input_fields": [
+        "argv"
+      ],
+      "output_fields": [
+        "stdout",
+        "exitCode"
+      ],
+      "side_effects": {
+        "local_process": true,
+        "authorization": "Explicit caller operation",
+        "external_mutation": false,
+        "may_cost_money": false
+      },
+      "errors": [
+        "CAPABILITY_UNAVAILABLE",
+        "FEATURE_UNSUPPORTED"
+      ]
+    },
+    {
+      "id": "desktop.console",
+      "purpose": "Connect authorized Boardmix editor",
+      "required": true,
+      "required_features": [
+        "console-paste",
+        "inspect-open-tabs"
+      ],
+      "input_fields": [
+        "bootstrap-file",
+        "editor-file-key"
+      ],
+      "output_fields": [
+        "connected",
+        "visible-file-state"
+      ],
+      "side_effects": {
+        "application_access": true,
+        "authorization": "User authorized Boardmix access",
+        "external_mutation": true,
+        "may_cost_money": false
+      },
+      "errors": [
+        "CAPABILITY_UNAVAILABLE",
+        "FEATURE_UNSUPPORTED"
+      ]
+    }
+  ]
+}

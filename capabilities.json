@@ -1,0 +1,230 @@
+{
+  "schemaVersion": 1,
+  "package": "@petercjl/boardmixcli",
+  "version": "0.1.0",
+  "stage": "experimental",
+  "releaseReady": true,
+  "responsibility": "Explicit capability operations; business workflow and layout remain with the calling Agent or application Skill",
+  "commands": [
+    "board.info",
+    "board.create",
+    "board.rename",
+    "board.open",
+    "board.close",
+    "image.list",
+    "image.inspect",
+    "image.import",
+    "object.selection",
+    "object.get",
+    "object.move",
+    "object.resize",
+    "view.fit"
+  ],
+  "coordinateContract": "object.move uses absolute top-left board coordinates",
+  "imageFormats": [
+    "image/png"
+  ],
+  "authentication": "ephemeral loopback token and existing Boardmix app login",
+  "adapterBuild": "index-DjSD2oPg.js",
+  "requiredCapabilities": [
+    "Node.js >=22",
+    "filesystem access",
+    "loopback HTTP",
+    "authorized Boardmix editor and console bootstrap"
+  ],
+  "agentEligibility": "Any Agent satisfying required capabilities",
+  "platformEvidence": {
+    "macos": "Boardmix 1.7.2 real atomic operations tested",
+    "windows": "portable lifecycle CI required; Boardmix runtime unverified",
+    "linux": "portable lifecycle CI required; Boardmix runtime unverified"
+  },
+  "unresolved": [
+    "Automatic attachment per opened editor view",
+    "Boardmix runtime validation on Windows and Linux"
+  ],
+  "installationLifecycle": {
+    "agentNeutral": true,
+    "targetRequired": true,
+    "hostRegistrationRequired": true,
+    "installationMode": "copy",
+    "sharedLinksAllowed": false,
+    "isolatedRuntimeRequired": true,
+    "skillRequired": true,
+    "updateRequiresSkillSync": true,
+    "required_components": [
+      "cli",
+      "skill"
+    ],
+    "installGuide": "INSTALL.md",
+    "updateGuide": "UPDATE.md",
+    "install": "Resolve own target; skill install with explicit agent and destination; copy runtime",
+    "update": "Stage candidate with npm; reconcile only selected Skill including same version",
+    "verification": "sha256 plus package, Skill and receipt version agreement; host discovery verified by host",
+    "installerIntegration": "postinstall notice and scripts-disabled INSTALL.md handoff"
+  },
+  "automaticUpdates": {
+    "enabledByDefault": true,
+    "intervalHours": 24,
+    "timeoutMs": 1200,
+    "trigger": "ordinary atomic command entry",
+    "configuration": "BOARDMIXCLI_CACHE_DIR selects cache",
+    "disable": "BOARDMIXCLI_UPDATE_CHECK=0",
+    "recovery": "24 hour offline backoff or explicit update check",
+    "defaultMode": "notify"
+  },
+  "commandContracts": {
+    "skill source": {
+      "options": {
+        "--json": {
+          "type": "boolean"
+        }
+      },
+      "sideEffects": "none"
+    },
+    "skill status": {
+      "options": {
+        "--json": {
+          "type": "boolean"
+        },
+        "--agent": {
+          "type": "string"
+        },
+        "--destination": {
+          "type": "string"
+        }
+      },
+      "sideEffects": "none"
+    },
+    "skill install": {
+      "options": {
+        "--json": {
+          "type": "boolean"
+        },
+        "--agent": {
+          "type": "string"
+        },
+        "--destination": {
+          "type": "string"
+        }
+      },
+      "sideEffects": "local-write"
+    },
+    "skill update": {
+      "options": {
+        "--json": {
+          "type": "boolean"
+        },
+        "--agent": {
+          "type": "string"
+        },
+        "--destination": {
+          "type": "string"
+        }
+      },
+      "sideEffects": "local-write"
+    },
+    "doctor": {
+      "options": {
+        "--json": {
+          "type": "boolean"
+        }
+      },
+      "sideEffects": "none"
+    },
+    "update check": {
+      "options": {
+        "--json": {
+          "type": "boolean"
+        }
+      },
+      "sideEffects": "local-write"
+    },
+    "update install": {
+      "options": {
+        "--json": {
+          "type": "boolean"
+        },
+        "--agent": {
+          "type": "string"
+        },
+        "--destination": {
+          "type": "string"
+        },
+        "--yes": {
+          "type": "boolean"
+        }
+      },
+      "sideEffects": "package-and-skill-update"
+    }
+  },
+  "maintenanceContract": {
+    "schemaVersion": 1,
+    "agentEligibility": "valid-name-with-generic-fallback",
+    "hostDiscoveryAuthority": "host",
+    "targetOptions": {
+      "--destination": {
+        "kind": "skill-directory"
+      }
+    },
+    "source": {
+      "name": {
+        "field": "name",
+        "type": "string"
+      },
+      "package": {
+        "field": "package",
+        "type": "string"
+      },
+      "version": {
+        "field": "version",
+        "type": "string"
+      },
+      "path": {
+        "field": "source",
+        "type": "string"
+      }
+    },
+    "status": {
+      "name": {
+        "field": "name",
+        "type": "string"
+      },
+      "package": {
+        "field": "package",
+        "type": "string"
+      },
+      "version": {
+        "field": "version",
+        "type": "string"
+      },
+      "target": {
+        "field": "target",
+        "type": "string"
+      },
+      "installed": {
+        "field": "installed",
+        "type": "boolean"
+      },
+      "managed": {
+        "field": "managed",
+        "type": "boolean"
+      },
+      "current": {
+        "field": "current",
+        "type": "boolean"
+      },
+      "edited": {
+        "field": "edited",
+        "type": "string[]"
+      },
+      "verification": {
+        "field": "verification",
+        "type": "object"
+      },
+      "recovery": {
+        "field": "recovery",
+        "type": "object"
+      }
+    }
+  }
+}

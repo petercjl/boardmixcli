@@ -1,0 +1,45 @@
+{
+  "name": "@petercjl/boardmixcli",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Atomic Boardmix desktop operations and portable Agent capability manual",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/petercjl/boardmixcli.git"
+  },
+  "homepage": "https://github.com/petercjl/boardmixcli#readme",
+  "bugs": {
+    "url": "https://github.com/petercjl/boardmixcli/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "boardmixcli": "bin/boardmixcli.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "node scripts/validate-package.mjs",
+    "prepack": "node scripts/validate-package.mjs",
+    "postinstall": "node scripts/install-notice.mjs",
+    "smoke": "node scripts/packed-smoke.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "bin/*.mjs",
+    "lib/*.mjs",
+    "lib/page-adapter.js",
+    "plugin/main.js",
+    "scripts/*.mjs",
+    "skills/boardmixcli/**",
+    "README.md",
+    "INSTALL.md",
+    "UPDATE.md",
+    "LICENSE",
+    "CONTRACT.md",
+    "capabilities.json"
+  ]
+}
