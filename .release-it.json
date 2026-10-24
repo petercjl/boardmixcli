@@ -1,0 +1,4 @@
+{
+  "npm": {"allowSameVersion": true},
+  "hooks": {"after:bump": "node scripts/sync-version.mjs && npm run check"}
+}
