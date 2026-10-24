@@ -10,7 +10,7 @@ const output=x=>process.stdout.write(JSON.stringify(x,null,2)+'\n');
 function flag(k){const i=args.indexOf(k);return i<0?undefined:args[i+1];}
 async function absent(p){try{await stat(p);throw Error('TARGET_EXISTS: '+p);}catch(e){if(e.code!=='ENOENT')throw e;}}
 try {
-  if(['skill','update','doctor'].includes(command))output(await maintenance(command,args));
+  if(['skill','update','doctor'].includes(command))output({ok:true,...await maintenance(command,args)});
   else if(['board.info','board.create','board.rename','board.open','board.close','image.list','image.inspect','image.import','object.selection','object.get','object.move','object.resize','view.fit'].includes(command)){await checkUpdate({automatic:true});output(await atomicCommand(command,args));}
   else if(command==='version'||command==='--version') {parse(args,{'--json':'boolean'});output({package:meta.name,version:meta.version});}
   else if(command==='capabilities') output(JSON.parse(await readFile(new URL('../capabilities.json',import.meta.url),'utf8')));
