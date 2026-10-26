@@ -26,6 +26,19 @@
         "console-paste",
         "inspect-open-tabs"
       ]
+    },
+    {
+      "capability_id": "browser.cdp",
+      "status": "implemented",
+      "implementation": {
+        "kind": "cli",
+        "command": "boardmixcli browser.connect",
+        "discovery": "Current target-owned CLI; explicit authorized loopback CDP endpoint and exact Boardmix file key."
+      },
+      "features": [
+        "loopback-cdp",
+        "existing-login"
+      ]
     }
   ]
 }

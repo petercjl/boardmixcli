@@ -39,7 +39,7 @@
     {
       "id": "desktop.console",
       "purpose": "Connect authorized Boardmix editor",
-      "required": true,
+      "required": false,
       "required_features": [
         "console-paste",
         "inspect-open-tabs"
@@ -61,6 +61,37 @@
       "errors": [
         "CAPABILITY_UNAVAILABLE",
         "FEATURE_UNSUPPORTED"
+      ]
+    },
+    {
+      "id": "browser.cdp",
+      "purpose": "Connect a caller-selected Boardmix editor without visible DevTools; alternative to desktop.console",
+      "required": false,
+      "required_features": [
+        "loopback-cdp",
+        "existing-login"
+      ],
+      "input_fields": [
+        "endpoint",
+        "file-key",
+        "session"
+      ],
+      "output_fields": [
+        "connected",
+        "fileKey",
+        "reused"
+      ],
+      "side_effects": {
+        "application_access": true,
+        "authorization": "Caller-selected browser and file",
+        "external_mutation": false,
+        "may_cost_money": false
+      },
+      "errors": [
+        "BROWSER_ENDPOINT_REQUIRED",
+        "EDITOR_NOT_OPEN",
+        "AMBIGUOUS_EDITOR",
+        "DESKTOP_ADAPTER_FAILED"
       ]
     }
   ]

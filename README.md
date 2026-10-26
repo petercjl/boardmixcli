@@ -1,6 +1,6 @@
 # BoardmixCLI
 
-Boardmix 桌面画板的元命令能力包。提供文件新建、命名、打开和关闭，PNG 导入、图元读取、精确尺寸与位置调整，返回 JSON 结果。当前 Agent 负责材料选择、顺序、布局与业务验收。
+Boardmix 桌面画板的元命令能力包。提供文件新建、命名、打开和关闭，PNG/JPEG/WebP 导入、Frame 与文字创建、图元读取、精确尺寸与位置调整，返回 JSON 结果。当前 Agent 负责材料选择、顺序、布局与业务验收。
 
 > 安装 @petercjl/boardmixcli，并验证当前 Agent 的配套 Skill 可用。
 
@@ -23,6 +23,18 @@ boardmixcli board.info --session /absolute/new-session.json --file-key EXPLICIT_
 
 `serve` 创建新的私有会话文件与 `.bootstrap.js`。在目标编辑器 Console 中执行启动脚本，然后关闭开发者工具；每个新打开的画板需要单独连接。会话文件包含临时令牌，勿公开。CLI 使用 App 现有登录态，不读取或导出登录凭证。
 
-可用操作：`board.info/create/rename/open/close`、`image.list/inspect/import`、`object.selection/get/move/resize`、`view.fit`。图元移动使用绝对左上角画板坐标；尺寸调整保留宽高比锁定状态。创建和导入超时后先核查结果再决定后续动作。
+可用操作：`board.info/create/rename/open/close`、`image.list/inspect/download/import`、`frame.create`、`text.create`、`object.selection/get/move/resize`、`view.fit`。图元移动使用绝对左上角画板坐标；尺寸调整保留宽高比锁定状态。创建和导入超时后先核查结果再决定后续动作。
 
 运行 `npm test` 与 `npm run check` 检查包、命令与安装生命周期。真实画板证据、私人会话和备份均不进入公开包。
+
+Batch contract v1 supports up to 20 images per native import, durable import receipts, bulk object reads and explicit bulk placement. See CONTRACT.md for JSON inputs and recovery behavior.
+
+Existing logged-in Chrome sessions can connect through `browser.targets/open/connect/close` using an explicit loopback CDP endpoint. This route keeps DevTools closed; no desktop restart or additional profile is required. See CONTRACT.md.
+
+## Managed browser and login
+
+`browser.ensure --json` starts/reuses macOS Google Chrome at http://127.0.0.1:9223 using the persistent `~/.dianshang-chrome-profile`, opens Boardmix home if absent, and returns `state:ready` only after workspace login markers are visible. No pre-opened Boardmix tab is required. The packaged launcher has no ecommerce CLI dependency.
+
+`auth.status --json` is read-only. `auth.wait --wait-ms 60000 --json` resumes preparation and polls login for up to 60 seconds; `browser.ensure` defaults to 15 seconds and returns immediately on an identified login page. AUTH_REQUIRED includes a human login prompt and resume command. Unknown/load states remain AUTH_STATE_UNKNOWN. CLI exits nonzero until ready. Human login/verification stays in Chrome; the CLI does not read or print credentials. Repeat calls reuse the profile and home tab.
+
+Startup verifies the listening process, Chrome executable, debugging port and exact profile. PORT_CONFLICT refuses to change other processes. Missing Chrome and unsupported launch platforms are explicit errors. Windows/Linux launch is not implemented. Existing explicit-endpoint browser commands remain compatible. Browser readiness does not grant file write authorization; continue with the caller-selected file and bridge session.

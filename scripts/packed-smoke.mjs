@@ -28,5 +28,5 @@ try{
  const image=path.join(scratch,'图片.png');await writeFile(image,png);
  const result=cli(b,['image.inspect','--file',image]);assert.equal(result.width,750);assert.equal(result.height,1475);
  assert.equal(cli(b,['skill','status','--agent','host-b','--destination',path.join(scratch,'host-b'),'--json']).current,true);
- console.log(JSON.stringify({ok:true,version,packedFiles:packed.files.length,isolation:'bootstrap and host-a removed; host-b version, image.inspect and receipt verified',historicalUpdater:'first release; registry absence checked before bootstrap publication'}));
+ console.log(JSON.stringify({ok:true,version,packedFiles:packed.files.length,isolation:'bootstrap and host-a removed; host-b version, image.inspect and receipt verified',historicalUpdater:'0.1.0 retains the same explicit Skill destination and target-owned runtime contract; this smoke tests candidate isolation'}));
 }finally{await rm(scratch,{recursive:true,force:true});}

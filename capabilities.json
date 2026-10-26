@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "package": "@petercjl/boardmixcli",
-  "version": "0.1.0",
+  "version": "0.1.6",
   "stage": "experimental",
   "releaseReady": true,
   "responsibility": "Explicit capability operations; business workflow and layout remain with the calling Agent or application Skill",
@@ -18,19 +18,38 @@
     "object.get",
     "object.move",
     "object.resize",
-    "view.fit"
+    "view.fit",
+    "frame.create",
+    "text.create",
+    "image.download",
+    "image.inspect.batch",
+    "image.import.batch",
+    "object.get.batch",
+    "object.place.batch",
+    "browser.targets",
+    "browser.open",
+    "browser.connect",
+    "browser.close",
+    "browser.ensure",
+    "auth.status",
+    "auth.wait",
+    "video.inspect",
+    "video.download",
+    "video.import"
   ],
   "coordinateContract": "object.move uses absolute top-left board coordinates",
   "imageFormats": [
-    "image/png"
+    "image/png",
+    "image/jpeg",
+    "image/webp"
   ],
-  "authentication": "ephemeral loopback token and existing Boardmix app login",
+  "authentication": "Managed Chrome launch, human Boardmix login, resumable auth check and ephemeral bridge token",
   "adapterBuild": "index-DjSD2oPg.js",
   "requiredCapabilities": [
     "Node.js >=22",
     "filesystem access",
     "loopback HTTP",
-    "authorized Boardmix editor and console bootstrap"
+    "authorized Boardmix browser CDP endpoint, or explicit desktop console fallback"
   ],
   "agentEligibility": "Any Agent satisfying required capabilities",
   "platformEvidence": {
@@ -39,7 +58,6 @@
     "linux": "portable lifecycle CI required; Boardmix runtime unverified"
   },
   "unresolved": [
-    "Automatic attachment per opened editor view",
     "Boardmix runtime validation on Windows and Linux"
   ],
   "installationLifecycle": {
@@ -226,5 +244,46 @@
         "type": "object"
       }
     }
+  },
+  "batchContract": {
+    "version": 1,
+    "imageImportLimit": 20,
+    "objectPlaceLimit": 200,
+    "objectReadLimit": 1000,
+    "mapping": "caller key + source MD5 to native resourceHash",
+    "recovery": "--receipt is reserved before submit; repeat only returns recorded or bridge outcome, never reimports"
+  },
+  "browserContract": {
+    "version": 2,
+    "endpoint": "explicit http://127.0.0.1:PORT",
+    "requires": "Chrome installed; browser.ensure owns macOS launch and login readiness",
+    "operations": [
+      "targets",
+      "open",
+      "connect",
+      "close",
+      "ensure",
+      "auth.status",
+      "auth.wait"
+    ],
+    "visibleDevTools": false,
+    "exactFileKey": true,
+    "creationOwnedBy": "board.create",
+    "desktopLaunch": "not provided; existing desktop uses console fallback",
+    "tested": "macOS Chrome with Boardmix index-DjSD2oPg.js",
+    "managedEndpoint": "http://127.0.0.1:9223",
+    "launchPlatforms": [
+      "macos"
+    ]
+  },
+  "videoContract": {
+    "version": 1,
+    "formats": [
+      "video/mp4"
+    ],
+    "maxBytes": 104857600,
+    "requires": "ffprobe on PATH",
+    "import": "Native video object; await upload and verify MD5, MIME and ready state",
+    "receipt": "Required; repeated receipt queries outcome and never resubmits"
   }
 }

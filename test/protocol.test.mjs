@@ -28,3 +28,11 @@ test('bridge correlates a request with a plugin response',async()=>{
     assert.equal((await (await done).json()).result.fileKey,'abcdefgh');
   }finally{b.server.closeAllConnections();await new Promise(r=>b.server.close(r));}
 });
+
+test('completed long operation refreshes editor liveness before the next request',async()=>{
+ const b=await startBridge(),headers={Authorization:'Bearer '+b.token,'Content-Type':'application/json'};
+ try{
+ await fetch(b.endpoint+'/next?fileKey=abcdefgh',{headers});const done=fetch(b.endpoint+'/request',{method:'POST',headers,body:JSON.stringify({op:'info',fileKey:'abcdefgh'})});let job;while(!job){job=(await(await fetch(b.endpoint+'/next?fileKey=abcdefgh',{headers})).json()).request;if(!job)await new Promise(r=>setTimeout(r,10));}
+ await new Promise(r=>setTimeout(r,5100));await fetch(b.endpoint+'/result',{method:'POST',headers,body:JSON.stringify({id:job.id,ok:true,result:{}})});await done;const status=await(await fetch(b.endpoint+'/status',{headers})).json();assert.equal(status.connected,true);assert.equal(status.clients[0].connected,true);
+ }finally{b.server.closeAllConnections();await new Promise(r=>b.server.close(r));}
+});
