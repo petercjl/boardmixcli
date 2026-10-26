@@ -5,6 +5,10 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
+      recover:
+        description: Recover registry publication for the existing package version
+        type: boolean
+        default: false
       release:
         description: patch, minor, major, prerelease, or exact semver
         required: true
@@ -65,6 +69,38 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Publish @petercjl/boardmixcli
+        if: ${{ !inputs.recover }}
         run: npx --yes --package @petercjl/npm-release-kit@0.1.4 npm-release-kit ci publish --release "${{ inputs.release }}" --tag "${{ inputs.tag }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Recover exact registry publication through OIDC
+        if: ${{ inputs.recover }}
+        env:
+          RELEASE_VERSION: ${{ inputs.release }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import {execFileSync} from 'node:child_process';
+          const p=JSON.parse(fs.readFileSync('package.json'));
+          if(p.version!==process.env.RELEASE_VERSION)throw Error('VERSION_MISMATCH');
+          const r=await fetch('https://registry.npmjs.org/'+encodeURIComponent(p.name)+'/'+p.version);
+          if(r.status===404)execFileSync('npm',['publish','--access','public','--provenance','--tag',process.env.RELEASE_TAG,'--loglevel','notice'],{stdio:'inherit'});
+          else if(!r.ok)throw Error('REGISTRY_UNAVAILABLE');
+          else console.log('Exact version already public; upload skipped.');
+          JS
+      - name: Verify public registry version and tag
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const p=JSON.parse(fs.readFileSync('package.json'));
+          for(let n=0;n<18;n++){
+            const r=await fetch('https://registry.npmjs.org/'+encodeURIComponent(p.name)+'?verify='+Date.now(),{headers:{'Cache-Control':'no-cache'}});
+            const d=await r.json();
+            if(d.versions?.[p.version]&&d['dist-tags']?.[process.env.RELEASE_TAG]===p.version){console.log('Verified '+p.name+'@'+p.version);process.exit(0);}
+            await new Promise(resolve=>setTimeout(resolve,10000));
+          }
+          throw Error('PUBLIC_REGISTRY_VERIFICATION_FAILED');
+          JS
